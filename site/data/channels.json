@@ -1,0 +1,47 @@
+{
+  "updated": "2026-06-12",
+  "note": "AI_AX_글로벌_정보원_100선·HR_통합_정보원_50선 기반 핵심 선별 + 대한민국 채널",
+  "channels": [
+    { "name": "OpenAI News", "url": "https://openai.com/news/", "desc": "GPT 계열 모델·제품 발표의 원천 (1차 소스)", "group": "labs", "region": "Global" },
+    { "name": "Anthropic News", "url": "https://www.anthropic.com/news", "desc": "Claude 모델 발표 + AI의 노동시장 영향 연구 병행", "group": "labs", "region": "Global" },
+    { "name": "Google DeepMind Blog", "url": "https://deepmind.google/blog/", "desc": "Gemini 및 프런티어 연구", "group": "labs", "region": "Global" },
+    { "name": "Meta AI Blog", "url": "https://ai.meta.com/blog/", "desc": "Llama 오픈소스 진영의 중심", "group": "labs", "region": "Global" },
+    { "name": "Microsoft AI Blog", "url": "https://blogs.microsoft.com/ai/", "desc": "Copilot·MAI 모델, 엔터프라이즈 AX 동향", "group": "labs", "region": "Global" },
+    { "name": "NVIDIA Newsroom", "url": "https://nvidianews.nvidia.com/", "desc": "AI 인프라·칩 로드맵의 사실상 표준", "group": "labs", "region": "Global" },
+    { "name": "Hugging Face Blog", "url": "https://huggingface.co/blog", "desc": "오픈소스 생태계 전반의 허브", "group": "labs", "region": "Global" },
+
+    { "name": "LMArena", "url": "https://lmarena.ai/", "desc": "사용자 블라인드 투표 기반 모델 순위 (구 Chatbot Arena)", "group": "bench", "region": "Global" },
+    { "name": "Artificial Analysis", "url": "https://artificialanalysis.ai/", "desc": "모델별 성능·속도·가격 동일 조건 비교 — 도입 의사결정 실무용", "group": "bench", "region": "Global" },
+    { "name": "Epoch AI", "url": "https://epoch.ai/", "desc": "컴퓨팅·학습 비용·스케일링 추세의 가장 엄밀한 데이터", "group": "bench", "region": "Global" },
+    { "name": "Stanford HAI — AI Index", "url": "https://hai.stanford.edu/ai-index", "desc": "글로벌 AI 산업 통계의 표준 레퍼런스 (연간)", "group": "bench", "region": "Global" },
+    { "name": "SWE-bench", "url": "https://www.swebench.com/", "desc": "코딩 에이전트 성능의 사실상 표준 벤치마크", "group": "bench", "region": "Global" },
+    { "name": "OpenRouter Rankings", "url": "https://openrouter.ai/rankings", "desc": "실제 API 사용량 기반 모델 점유율 — 시장의 '실수요' 지표", "group": "bench", "region": "Global" },
+
+    { "name": "arXiv (cs.AI/CL/LG)", "url": "https://arxiv.org/list/cs.AI/recent", "desc": "모든 AI 논문의 출발점", "group": "research", "region": "Global" },
+    { "name": "Papers with Code", "url": "https://paperswithcode.com/", "desc": "논문-코드-SOTA 순위 연결", "group": "research", "region": "Global" },
+    { "name": "Semantic Scholar", "url": "https://www.semanticscholar.org/", "desc": "인용 네트워크 기반 논문 탐색", "group": "research", "region": "Global" },
+
+    { "name": "MIT Technology Review", "url": "https://www.technologyreview.com/", "desc": "기술 검증 저널리즘 — 과장 필터링", "group": "media", "region": "Global" },
+    { "name": "The Information", "url": "https://www.theinformation.com/", "desc": "AI 기업 매출·자금조달·내부 동향 특종 (유료)", "group": "media", "region": "Global" },
+    { "name": "The Rundown AI", "url": "https://www.therundown.ai/", "desc": "구독자 200만+ 데일리 뉴스레터 — 가장 정제된 편집", "group": "media", "region": "Global" },
+    { "name": "TLDR AI", "url": "https://tldr.tech/ai", "desc": "구독자 125만+ — 스캔형 초압축 데일리", "group": "media", "region": "Global" },
+    { "name": "Ben's Bites", "url": "https://bensbites.com/", "desc": "창업자·투자자 관점 데일리", "group": "media", "region": "Global" },
+    { "name": "Import AI (Jack Clark)", "url": "https://importai.substack.com/", "desc": "정책·거버넌스 관점 주간 뉴스레터 — Anthropic 공동창업자", "group": "media", "region": "Global" },
+    { "name": "One Useful Thing (Ethan Mollick)", "url": "https://www.oneusefulthing.org/", "desc": "AI의 실제 업무 적용 관점 최고 권위 — 와튼 교수", "group": "media", "region": "Global" },
+
+    { "name": "McKinsey — State of AI", "url": "https://www.mckinsey.com/capabilities/quantumblack/our-insights", "desc": "기업 AI 도입률 서베이 표준 + 조직·인재 리서치", "group": "consult", "region": "Global" },
+    { "name": "BCG — AI at Work", "url": "https://www.bcg.com/capabilities/artificial-intelligence", "desc": "직원 단위 AI 사용 실태 서베이 (연간·글로벌)", "group": "consult", "region": "Global" },
+    { "name": "Deloitte AI Institute", "url": "https://www.deloitte.com/us/en/what-we-do/capabilities/applied-artificial-intelligence.html", "desc": "AI 도입 분기 추적 + Human Capital Trends", "group": "consult", "region": "Global" },
+    { "name": "Gartner (HR Practice)", "url": "https://www.gartner.com/en/human-resources", "desc": "하이프 사이클 + CHRO 어젠다·HR 테크 리서치", "group": "consult", "region": "Global" },
+    { "name": "Josh Bersin", "url": "https://joshbersin.com/", "desc": "HR 테크·조직 설계의 글로벌 기준점 — HR 2030 등", "group": "consult", "region": "Global" },
+    { "name": "SHRM", "url": "https://www.shrm.org/", "desc": "세계 최대 HR 협회 — State of AI in HR 연간 보고", "group": "consult", "region": "Global" },
+    { "name": "a16z", "url": "https://a16z.com/", "desc": "Top 100 GenAI Apps 등 AI 사용 순위·시장 구조", "group": "consult", "region": "Global" },
+
+    { "name": "AI타임스", "url": "https://www.aitimes.com/", "desc": "국내 대표 AI 전문 미디어 — 기업·정책·모델 소식", "group": "kr", "region": "KR" },
+    { "name": "SPRi AI 브리프", "url": "https://spri.kr/posts?code=AI-Brief", "desc": "소프트웨어정책연구소 — 월간 글로벌 AI 동향 정리 (무료 PDF)", "group": "kr", "region": "KR" },
+    { "name": "LG AI연구원", "url": "https://www.lgresearch.ai/", "desc": "엑사원(EXAONE) 개발 — 국내 대표 기업 AI 랩", "group": "kr", "region": "KR" },
+    { "name": "업스테이지", "url": "https://www.upstage.ai/", "desc": "솔라(Solar) 모델 — 국내 대표 AI 스타트업, K-AI 프로젝트 참여", "group": "kr", "region": "KR" },
+    { "name": "ZDNet Korea", "url": "https://zdnet.co.kr/", "desc": "국내 테크 미디어 — AI 산업·정책 속보", "group": "kr", "region": "KR" },
+    { "name": "대한민국 정책브리핑", "url": "https://www.korea.kr/", "desc": "정부 AI 정책·지원사업(AX-Sprint 등) 보도자료 1차 소스", "group": "kr", "region": "KR" }
+  ]
+}
