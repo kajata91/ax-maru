@@ -99,4 +99,18 @@ AX-Maru/
 ## 10. Git / 배포
 
 - 원격: `git@github.com:kajata91/ax-maru.git` (main, SSH 인증 `~/.ssh/id_ed25519`)
-- `.DS_Store`는 `.gitignore`로 제외.
+- `.DS_Store`는 `.gitignore`로 제외. `node_modules/`·`scripts/out/`·`.env`도 제외.
+
+## 11. 자동화 (확정 = 무료 구성)
+
+**비용 원칙: 비용이 발생하는 작업은 어떤 상황에서도 실행 전 반드시 사용자 승인을 받는다. 무료 대안을 함께 제시한다.**
+(설계 문서 `AX-Maru_자동화_2단계_설계.md`는 유료 클라우드 큐레이션도 다루지만, **채택된 구성은 아래 무료 버전**이다.)
+
+- **수집(유료 가능성)**: Cowork로 **사람이 수동** 실행 (자동 LLM 큐레이션은 비용 → 채택 안 함). 자동화하려면 사전 승인 필요.
+- **자동화(전부 무료)**: 데이터가 `main`에 푸시되면 GitHub Actions(`.github/workflows/publish.yml`)가
+  ① `scripts/verify.mjs`로 품질 검증(JSON 무결성·링크 도달·날짜간 중복·6분야 커버리지) →
+  ② GitHub Pages로 `site/` 공개 → ③ 요약+설명+링크 이메일 발송(Gmail SMTP, 시크릿 설정 시).
+- **품질 가드 `scripts/verify.mjs`**: 구조 오류는 배포 차단(실패 안전장치), 링크 실패는 경고. 외부 의존성 없는 순수 Node.
+- **일상 흐름**: Cowork로 다이제스트 생성 → `/ax-push` → (자동) 검증·공개·이메일. 설치는 `자동화_설치가이드.md` 참고.
+- **카테고리 목표**: 매일 6개 분야(hot/hr/research/learning/wise + Total 집계) 모두 최소 1건씩 채우도록 시도(자료 없으면 생략).
+- **미채택(유료, 승인 시 검토)**: 매일 무인 자동 수집(클라우드 스케줄+LLM), 요약-원문 의미 일치 심층 검증(LLM).
