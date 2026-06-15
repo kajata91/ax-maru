@@ -467,6 +467,58 @@
     .hero-overlay, .hero { min-height: 210px; }
     .cat-btn { min-width: 82px; }
   }
+
+  /* ════════════ AX-Maru 편집 모드 (Visual Editor) ════════════ */
+  .axe-fab {
+    position: fixed; right: 18px; bottom: 18px; z-index: 320;
+    width: 52px; height: 52px; border-radius: 16px;
+    border: 1px solid var(--stroke-2); background: rgba(20,23,32,.92);
+    backdrop-filter: blur(14px); color: var(--text); font-size: 20px;
+    cursor: pointer; box-shadow: 0 14px 40px rgba(0,0,0,.5);
+    transition: transform .18s, background .18s; font-family: inherit;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .axe-fab:hover { transform: translateY(-2px); }
+  .axe-fab.on { background: linear-gradient(135deg, var(--cyan), var(--violet)); color: #06070c; border-color: transparent; }
+  body.axe-editing .axe-hi { outline: 2px dashed var(--cyan) !important; outline-offset: 1px; cursor: pointer !important; }
+  body.axe-editing .axe-sel { outline: 2px solid var(--violet) !important; outline-offset: 1px; box-shadow: 0 0 0 4px rgba(167,139,250,.18) !important; }
+  body.axe-editing [data-axe-hidden] { opacity: .38 !important; outline: 1px dashed var(--high) !important; }
+
+  .axe-panel {
+    position: fixed; right: 18px; bottom: 84px; z-index: 320;
+    width: 304px; max-height: 78vh; overflow-y: auto;
+    background: rgba(14,16,23,.97); backdrop-filter: blur(24px);
+    border: 1px solid var(--stroke-2); border-radius: 18px;
+    box-shadow: 0 30px 90px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.07);
+    color: var(--text); font-size: 13px; display: none;
+  }
+  .axe-panel.show { display: block; animation: viewIn .18s ease; }
+  .axe-ph { display: flex; align-items: center; gap: 8px; padding: 13px 15px; border-bottom: 1px solid var(--stroke); }
+  .axe-ph b { font-size: 13.5px; font-weight: 800; }
+  .axe-tabs { display: flex; gap: 4px; padding: 11px 12px 0; }
+  .axe-tab { flex: 1; border: none; background: var(--glass); color: var(--dim); font-family: inherit; font-size: 12px; font-weight: 700; padding: 7px; border-radius: 9px; cursor: pointer; }
+  .axe-tab.on { background: var(--glass-3); color: var(--text); }
+  .axe-bd { padding: 13px 15px; }
+  .axe-tabpane { display: none; flex-direction: column; gap: 15px; }
+  .axe-tabpane.on { display: flex; }
+  .axe-grp { display: flex; flex-direction: column; gap: 8px; }
+  .axe-lab { font-size: 10.5px; font-weight: 800; color: var(--faint); letter-spacing: .6px; text-transform: uppercase; }
+  .axe-row { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+  .axe-mini { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12.5px; }
+  .axe-mini label { color: var(--dim); font-weight: 600; }
+  .axe-ta { width: 100%; min-height: 64px; background: var(--glass-2); border: 1px solid var(--stroke-2); border-radius: 10px; color: var(--text); font-family: inherit; font-size: 12.5px; line-height: 1.6; padding: 9px; resize: vertical; outline: none; }
+  .axe-btn { background: var(--glass-2); border: 1px solid var(--stroke-2); color: var(--text); border-radius: 9px; padding: 7px 12px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; transition: background .15s; }
+  .axe-btn:hover { background: var(--glass-3); }
+  .axe-btn.sm { padding: 5px 10px; font-size: 11.5px; }
+  .axe-btn.pri { background: linear-gradient(135deg, var(--cyan), var(--violet)); color: #06070c; border-color: transparent; }
+  .axe-btn.warn { color: var(--high); border-color: rgba(255,93,93,.3); }
+  .axe-color { width: 38px; height: 27px; border-radius: 7px; border: 1px solid var(--stroke-2); background: none; cursor: pointer; padding: 1px; }
+  .axe-num { width: 64px; background: var(--glass-2); border: 1px solid var(--stroke-2); border-radius: 8px; color: var(--text); font-family: inherit; font-size: 12px; padding: 5px 8px; outline: none; }
+  .axe-seg { display: flex; gap: 3px; background: var(--glass); border: 1px solid var(--stroke); border-radius: 9px; padding: 3px; }
+  .axe-seg button { border: none; background: none; color: var(--dim); font-family: inherit; font-size: 12px; font-weight: 700; padding: 4px 9px; border-radius: 7px; cursor: pointer; }
+  .axe-seg button.on { background: var(--glass-3); color: var(--text); }
+  .axe-hint { font-size: 11.5px; color: var(--faint); line-height: 1.65; }
+  .axe-hint b { color: var(--dim); }
 </style>
 </head>
 <body>
@@ -1104,6 +1156,316 @@ document.getElementById("cmdkInput").addEventListener("keydown", e => {
 });
 
 init();
+</script>
+
+<!-- ═══════════════ AX-Maru 편집 모드 (Visual Editor) ═══════════════ -->
+<button class="axe-fab" id="axeFab" title="편집 모드 켜기/끄기 (Alt+E)">✎</button>
+<div class="axe-panel" id="axePanel">
+  <div class="axe-ph"><b>편집 모드</b><span class="axe-hint" id="axeSelName" style="margin-left:auto">요소를 선택하세요</span></div>
+  <div class="axe-tabs">
+    <button class="axe-tab on" data-pane="el">요소</button>
+    <button class="axe-tab" data-pane="tone">톤앤매너</button>
+    <button class="axe-tab" data-pane="io">저장</button>
+  </div>
+  <div class="axe-bd">
+    <div class="axe-tabpane on" id="axePaneEl"></div>
+    <div class="axe-tabpane" id="axePaneTone"></div>
+    <div class="axe-tabpane" id="axePaneIo"></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+(function () {
+  // ───────── 상태 ─────────
+  let EDITS = { tokens: {}, bodyBg: null, fontFamily: null, elements: {} };
+  let SELECTED = null, mo = null, moTarget = null, raf = 0;
+  const $ = id => document.getElementById(id);
+  const fab = $("axeFab"), panel = $("axePanel");
+  // 데이터로 자동 생성되어 텍스트 고정 편집이 부적절한 영역
+  const DYN = ["#feed", "#top3", "#catRow", "#hero", "#kwGrid", "#chGrid", "#archBody", "#chFilters", "#cmdkList", "#dateSelect"];
+  // 클릭 시 선택 대신 동작을 그대로 통과시킬 내비게이션 컨트롤
+  const THROUGH = ".nav-item,.cat-btn,.imp-tab,.ch-chip,.date-select,.kbd-chip";
+  const TOKENS = [
+    ["--cyan", "강조 시안"], ["--violet", "강조 바이올렛"], ["--blue", "강조 블루"],
+    ["--text", "본문 텍스트"], ["--dim", "보조 텍스트"], ["--faint", "흐린 텍스트"],
+    ["--high", "중요도 상"], ["--mid", "중요도 중"],
+    ["--c-tech", "분야 · 기술"], ["--c-case", "분야 · 사례"], ["--c-paper", "분야 · 논문"],
+    ["--c-policy", "분야 · 정책"], ["--c-hr", "분야 · HR"], ["--c-concept", "분야 · 개념"],
+    ["--star", "북마크 별"],
+  ];
+
+  // ───────── 유틸 ─────────
+  const editing = () => document.body.classList.contains("axe-editing");
+  const isDynamic = sel => DYN.some(d => sel.startsWith(d));
+  function save() { try { localStorage.setItem("axmaru_edits", JSON.stringify(EDITS)); } catch (e) {} }
+  function normHex(c) {
+    c = (c || "").trim();
+    if (c[0] === "#") return c.length === 4 ? "#" + [...c.slice(1)].map(x => x + x).join("") : c.slice(0, 7);
+    const m = c.match(/\d+/g);
+    if (m && m.length >= 3) return "#" + m.slice(0, 3).map(x => (+x).toString(16).padStart(2, "0")).join("");
+    return "#000000";
+  }
+  function selOf(el) {
+    if (el.id) return "#" + CSS.escape(el.id);
+    const parts = [];
+    let node = el;
+    while (node && node.nodeType === 1 && node !== document.body) {
+      if (node.id) { parts.unshift("#" + CSS.escape(node.id)); break; }
+      let tag = node.tagName.toLowerCase();
+      const p = node.parentNode;
+      if (p) {
+        const same = [...p.children].filter(c => c.tagName === node.tagName);
+        if (same.length > 1) tag += `:nth-of-type(${same.indexOf(node) + 1})`;
+      }
+      parts.unshift(tag);
+      node = node.parentNode;
+    }
+    return parts.join(">");
+  }
+  function getTr(e) {
+    const t = (e.style && e.style.transform) || "";
+    const m = t.match(/translate\(([-\d.]+)px,\s*([-\d.]+)px\)/);
+    return m ? { x: +m[1], y: +m[2] } : { x: 0, y: 0 };
+  }
+
+  // ───────── 오버라이드 적용 ─────────
+  function applyAll() {
+    if (mo) mo.disconnect();
+    try {
+      for (const k in EDITS.tokens) document.documentElement.style.setProperty(k, EDITS.tokens[k]);
+      if (EDITS.bodyBg) document.body.style.background = EDITS.bodyBg;
+      if (EDITS.fontFamily) document.body.style.fontFamily = EDITS.fontFamily;
+      const ed = editing();
+      for (const sel in EDITS.elements) {
+        const e = EDITS.elements[sel];
+        let el; try { el = document.querySelector(sel); } catch (_) { continue; }
+        if (!el) continue;
+        if (e.html != null && !isDynamic(sel) && el.innerHTML !== e.html) el.innerHTML = e.html;
+        if (e.style) for (const p in e.style) el.style.setProperty(p, e.style[p]);
+        if (e.hidden) {
+          if (ed) { el.style.removeProperty("display"); el.setAttribute("data-axe-hidden", "1"); }
+          else { el.style.display = "none"; el.removeAttribute("data-axe-hidden"); }
+        } else el.removeAttribute("data-axe-hidden");
+      }
+    } finally { if (mo && moTarget) mo.observe(moTarget, { childList: true, subtree: true }); }
+  }
+  function scheduleApply() { cancelAnimationFrame(raf); raf = requestAnimationFrame(applyAll); }
+
+  function setStyle(prop, val) {
+    if (!SELECTED) return;
+    const sel = selOf(SELECTED);
+    const e = EDITS.elements[sel] = EDITS.elements[sel] || {};
+    e.style = e.style || {};
+    if (val === "" || val == null) { delete e.style[prop]; SELECTED.style.removeProperty(prop); }
+    else { e.style[prop] = val; SELECTED.style.setProperty(prop, val); }
+    save();
+  }
+  function setTranslate(x, y) { setStyle("transform", (x || y) ? `translate(${x}px,${y}px)` : ""); }
+
+  // ───────── 요소 탭 ─────────
+  function elPaneHTML() {
+    if (!SELECTED) return '<div class="axe-hint">편집 모드가 켜졌습니다. 화면의 요소에 마우스를 올린 뒤 <b>클릭</b>해 선택하세요.</div>';
+    const sel = selOf(SELECTED), dyn = isDynamic(sel), cs = getComputedStyle(SELECTED);
+    const e = EDITS.elements[sel] || {};
+    const fw = String(parseInt((e.style && e.style["font-weight"]) || cs.fontWeight));
+    let ta = (e.style && e.style["text-align"]) || cs.textAlign; if (ta === "start") ta = "left";
+    const tr = getTr(e);
+    const seg = (id, cur, opts) => `<div class="axe-seg" id="${id}">${opts.map(([v, l]) => `<button data-v="${v}" class="${cur === v ? "on" : ""}">${l}</button>`).join("")}</div>`;
+    return `
+      <div class="axe-grp">
+        <div class="axe-lab">텍스트</div>
+        ${dyn
+          ? '<div class="axe-hint">이 영역은 데이터로 자동 생성됩니다. 글자 고정 편집 대신 아래의 색·크기·정렬·숨김을 사용하세요.</div>'
+          : `<button class="axe-btn sm" id="axeInline">✏️ 직접 편집 (클릭 후 입력)</button>
+             ${SELECTED.childElementCount === 0
+               ? `<textarea class="axe-ta" id="axeText">${esc(SELECTED.textContent)}</textarea><div class="axe-row"><button class="axe-btn sm pri" id="axeTextApply">텍스트 적용</button></div>`
+               : '<div class="axe-hint">하위 요소가 있어 「직접 편집」으로 수정하세요.</div>'}`}
+      </div>
+      <div class="axe-grp">
+        <div class="axe-lab">글자</div>
+        <div class="axe-mini"><label>크기</label><span class="axe-row"><button class="axe-btn sm" data-fs="-1">−</button><input class="axe-num" id="axeFs" type="number" value="${parseInt(cs.fontSize) || 0}"><button class="axe-btn sm" data-fs="1">+</button></span></div>
+        <div class="axe-mini"><label>색상</label><input class="axe-color" id="axeColor" type="color" value="${normHex(cs.color)}"></div>
+        <div class="axe-mini"><label>굵기</label>${seg("axeFw", fw, [["400", "보통"], ["600", "중간"], ["700", "굵게"], ["800", "진하게"]])}</div>
+        <div class="axe-mini"><label>정렬</label>${seg("axeTa", ta, [["left", "좌"], ["center", "중"], ["right", "우"]])}</div>
+      </div>
+      <div class="axe-grp">
+        <div class="axe-lab">여백 · 위치</div>
+        <div class="axe-mini"><label>위 여백</label><input class="axe-num" id="axeMt" type="number" value="${parseInt((e.style && e.style["margin-top"]) || cs.marginTop) || 0}"></div>
+        <div class="axe-mini"><label>아래 여백</label><input class="axe-num" id="axeMb" type="number" value="${parseInt((e.style && e.style["margin-bottom"]) || cs.marginBottom) || 0}"></div>
+        <div class="axe-mini"><label>좌우 이동</label><input class="axe-num" id="axeTx" type="number" value="${tr.x}"></div>
+        <div class="axe-mini"><label>상하 이동</label><input class="axe-num" id="axeTy" type="number" value="${tr.y}"></div>
+      </div>
+      <div class="axe-row">
+        <button class="axe-btn sm" id="axeHide">${e.hidden ? "👁 다시 표시" : "🙈 숨기기"}</button>
+        <button class="axe-btn sm warn" id="axeReset">이 요소 초기화</button>
+      </div>`;
+  }
+  function rebuildElPane() { $("axePaneEl").innerHTML = elPaneHTML(); bindElPane(); }
+  function bindElPane() {
+    if (!SELECTED) return;
+    const inl = $("axeInline");
+    if (inl) inl.onclick = () => {
+      const el = SELECTED; el.contentEditable = "true"; el.focus();
+      const done = () => {
+        el.contentEditable = "false"; el.removeEventListener("blur", done);
+        const s = selOf(el); const e = EDITS.elements[s] = EDITS.elements[s] || {};
+        e.html = el.innerHTML; save();
+      };
+      el.addEventListener("blur", done);
+    };
+    const tApply = $("axeTextApply");
+    if (tApply) tApply.onclick = () => {
+      SELECTED.textContent = $("axeText").value;
+      const s = selOf(SELECTED); const e = EDITS.elements[s] = EDITS.elements[s] || {};
+      e.html = SELECTED.innerHTML; save(); showToast("텍스트를 적용했습니다");
+    };
+    const col = $("axeColor"); if (col) col.oninput = ev => setStyle("color", ev.target.value);
+    const fs = $("axeFs");
+    if (fs) {
+      fs.onchange = () => setStyle("font-size", fs.value + "px");
+      document.querySelectorAll("[data-fs]").forEach(b => b.onclick = () => { fs.value = Math.max(8, (+fs.value) + (+b.dataset.fs)); setStyle("font-size", fs.value + "px"); });
+    }
+    const fw = $("axeFw"); if (fw) fw.querySelectorAll("button").forEach(b => b.onclick = () => { setStyle("font-weight", b.dataset.v); fw.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); });
+    const taE = $("axeTa"); if (taE) taE.querySelectorAll("button").forEach(b => b.onclick = () => { setStyle("text-align", b.dataset.v); taE.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); });
+    const mt = $("axeMt"); if (mt) mt.onchange = () => setStyle("margin-top", mt.value + "px");
+    const mb = $("axeMb"); if (mb) mb.onchange = () => setStyle("margin-bottom", mb.value + "px");
+    const tx = $("axeTx"), ty = $("axeTy"); const upd = () => setTranslate(+tx.value || 0, +ty.value || 0);
+    if (tx) tx.onchange = upd; if (ty) ty.onchange = upd;
+    const hide = $("axeHide");
+    if (hide) hide.onclick = () => {
+      const s = selOf(SELECTED); const e = EDITS.elements[s] = EDITS.elements[s] || {};
+      e.hidden = !e.hidden; save(); applyAll(); rebuildElPane();
+    };
+    const rst = $("axeReset");
+    if (rst) rst.onclick = () => {
+      const s = selOf(SELECTED); delete EDITS.elements[s]; save();
+      ["color", "font-size", "font-weight", "text-align", "margin-top", "margin-bottom", "transform", "display"].forEach(p => SELECTED.style.removeProperty(p));
+      SELECTED.removeAttribute("data-axe-hidden");
+      applyAll(); rebuildElPane();
+      showToast("이 요소를 초기화했습니다 (텍스트 변경은 새로고침 후 반영)");
+    };
+  }
+
+  // ───────── 톤앤매너 탭 ─────────
+  function buildTonePane() {
+    const root = getComputedStyle(document.documentElement);
+    let h = '<div class="axe-grp"><div class="axe-lab">강조 · 텍스트 · 분야 색</div>';
+    TOKENS.forEach(([v, l]) => {
+      const cur = (EDITS.tokens[v] || root.getPropertyValue(v));
+      h += `<div class="axe-mini"><label>${l}</label><input class="axe-color" data-tok="${v}" type="color" value="${normHex(cur)}"></div>`;
+    });
+    h += "</div>";
+    h += `<div class="axe-grp"><div class="axe-lab">배경 · 폰트</div>
+      <div class="axe-mini"><label>배경색</label><input class="axe-color" id="axeBg" type="color" value="${normHex(EDITS.bodyBg || "#030407")}"></div>
+      <div class="axe-mini"><label>폰트</label><select class="axe-num" id="axeFont" style="width:auto">
+        <option value="">기본 (Pretendard)</option>
+        <option value="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">시스템</option>
+        <option value="Georgia,'Times New Roman',serif">명조 (세리프)</option>
+        <option value="ui-monospace,'SF Mono',Menlo,monospace">고정폭</option>
+      </select></div>
+      <button class="axe-btn sm warn" id="axeToneReset" style="align-self:flex-start">톤 초기화</button></div>`;
+    $("axePaneTone").innerHTML = h;
+    $("axePaneTone").querySelectorAll("[data-tok]").forEach(inp => inp.oninput = () => {
+      EDITS.tokens[inp.dataset.tok] = inp.value;
+      document.documentElement.style.setProperty(inp.dataset.tok, inp.value); save();
+    });
+    $("axeBg").oninput = ev => { EDITS.bodyBg = ev.target.value; document.body.style.background = ev.target.value; save(); };
+    const f = $("axeFont"); f.value = EDITS.fontFamily || "";
+    f.onchange = () => { EDITS.fontFamily = f.value; document.body.style.fontFamily = f.value || ""; save(); };
+    $("axeToneReset").onclick = () => {
+      Object.keys(EDITS.tokens).forEach(k => document.documentElement.style.removeProperty(k));
+      EDITS.tokens = {}; EDITS.bodyBg = null; EDITS.fontFamily = null;
+      document.body.style.removeProperty("background"); document.body.style.removeProperty("font-family");
+      save(); buildTonePane(); showToast("톤앤매너를 초기화했습니다");
+    };
+  }
+
+  // ───────── 저장 탭 ─────────
+  function buildIoPane() {
+    $("axePaneIo").innerHTML = `
+      <div class="axe-hint">편집 내용은 이 브라우저에 자동 저장됩니다(새로고침해도 유지). 모든 기기·방문자에게 영구 반영하려면 <b>edits.json</b>을 내려받아 <b>site/data/</b> 폴더에 넣고 GitHub에 푸시하세요.</div>
+      <button class="axe-btn pri" id="axeDl">⬇ edits.json 내보내기</button>
+      <button class="axe-btn" id="axeCopy">📋 클립보드로 복사</button>
+      <button class="axe-btn warn" id="axeResetAll">전체 변경 초기화</button>`;
+    $("axeDl").onclick = () => {
+      const blob = new Blob([JSON.stringify(EDITS, null, 2)], { type: "application/json" });
+      const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "edits.json"; a.click();
+      URL.revokeObjectURL(a.href);
+      showToast("edits.json 다운로드 — site/data/ 에 넣고 푸시하면 영구 반영됩니다");
+    };
+    $("axeCopy").onclick = () => navigator.clipboard.writeText(JSON.stringify(EDITS, null, 2)).then(() => showToast("변경 내용을 클립보드에 복사했습니다"));
+    $("axeResetAll").onclick = () => { if (confirm("모든 편집 내용을 초기화할까요? (새로고침됩니다)")) { localStorage.removeItem("axmaru_edits"); location.reload(); } };
+  }
+
+  // ───────── 선택 ─────────
+  function select(el) {
+    if (SELECTED) SELECTED.classList.remove("axe-sel");
+    SELECTED = el; el.classList.add("axe-sel");
+    $("axeSelName").textContent = "<" + el.tagName.toLowerCase() + ">";
+    activateTab("el"); rebuildElPane();
+  }
+  function deselect() { if (SELECTED) SELECTED.classList.remove("axe-sel"); SELECTED = null; $("axeSelName").textContent = "요소를 선택하세요"; rebuildElPane(); }
+  function activateTab(name) {
+    panel.querySelectorAll(".axe-tab").forEach(t => t.classList.toggle("on", t.dataset.pane === name));
+    ["el", "tone", "io"].forEach(p => $("axePane" + p[0].toUpperCase() + p.slice(1)).classList.toggle("on", p === name));
+  }
+
+  // ───────── 편집 모드 토글 ─────────
+  function toggleEdit(on) {
+    const ed = on == null ? !editing() : on;
+    document.body.classList.toggle("axe-editing", ed);
+    fab.classList.toggle("on", ed);
+    panel.classList.toggle("show", ed);
+    if (!ed) deselect();
+    applyAll();
+  }
+
+  // ───────── 이벤트 ─────────
+  fab.onclick = () => toggleEdit();
+  panel.querySelectorAll(".axe-tab").forEach(t => t.onclick = () => activateTab(t.dataset.pane));
+  document.addEventListener("keydown", e => {
+    if (e.altKey && e.key.toLowerCase() === "e") { e.preventDefault(); toggleEdit(); }
+    else if (e.key === "Escape" && editing() && SELECTED && !SELECTED.isContentEditable) deselect();
+  });
+  document.addEventListener("mouseover", e => {
+    if (!editing()) return;
+    const t = e.target;
+    if (t === document.body || t === document.documentElement || t.closest(".axe-panel") || t.closest(".axe-fab")) return;
+    t.classList.add("axe-hi");
+  }, true);
+  document.addEventListener("mouseout", e => { if (e.target.classList) e.target.classList.remove("axe-hi"); }, true);
+  document.addEventListener("click", e => {
+    if (!editing()) return;
+    if (e.target.closest(".axe-panel") || e.target.closest(".axe-fab")) return;
+    if (e.target.closest(THROUGH)) return; // 내비게이션은 그대로 동작
+    if (SELECTED && SELECTED.isContentEditable && SELECTED.contains(e.target)) return;
+    e.preventDefault(); e.stopPropagation();
+    e.target.classList.remove("axe-hi");
+    select(e.target);
+  }, true);
+
+  // ───────── 초기화 ─────────
+  // render()를 감싸 동적 렌더링 후에도 오버라이드를 다시 적용
+  if (typeof window.render === "function" && !window.render.__axe) {
+    const orig = window.render;
+    const wrapped = function () { const r = orig.apply(this, arguments); scheduleApply(); return r; };
+    wrapped.__axe = 1; window.render = wrapped;
+  }
+  async function load() {
+    let ls = null; try { ls = JSON.parse(localStorage.getItem("axmaru_edits")); } catch (_) {}
+    if (ls) EDITS = ls;
+    else { try { const f = await fetch("data/edits.json", { cache: "no-store" }); if (f.ok) EDITS = await f.json(); } catch (_) {} }
+    EDITS.tokens = EDITS.tokens || {}; EDITS.elements = EDITS.elements || {};
+  }
+  (async () => {
+    await load();
+    moTarget = document.querySelector(".frame");
+    mo = new MutationObserver(scheduleApply);
+    applyAll();
+    buildTonePane(); buildIoPane(); rebuildElPane();
+  })();
+})();
 </script>
 </body>
 </html>
