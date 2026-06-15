@@ -1,0 +1,11 @@
+{
+  "name": "ax-maru-pipeline",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "AX-Maru 무료 품질 가드·이메일 렌더러 (외부 의존성 없음, 순수 Node)",
+  "scripts": {
+    "verify": "node verify.mjs",
+    "email": "node verify.mjs --emit-email out/email.html"
+  }
+}

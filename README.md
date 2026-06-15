@@ -16,4 +16,4 @@ The World’s Fastest, Deepest Source for AI &amp; AX Insights. Don’t just wat
 
 ## 변경 이력 (핵심 기능 변화)
 
-- **2026-06-15** — GitHub 저장소 연동, 커밋·푸시 스킬(`/ax-push`), 프로젝트 문서화(CLAUDE.md·memory.md) 도입.
+- **2026-06-15** — GitHub 저장소 연동, 커밋·푸시 스킬(`/ax-push`), 프로젝트 문서화(CLAUDE.md·memory.md) 도입. 6분야 명칭을 새 명칭으로 통일(소스·주제 정의서 v0.3), 2단계 자동화 설계 문서(`AX-Maru_자동화_2단계_설계.md`) 신설.

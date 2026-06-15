@@ -1,2 +1,8 @@
 .DS_Store
 **/.DS_Store
+
+# Node / 파이프라인
+node_modules/
+scripts/out/
+.env
+.env.*

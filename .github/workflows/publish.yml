@@ -1,0 +1,72 @@
+name: AX-Maru 검증·공개·이메일
+
+# 트리거: site/ 데이터가 main에 푸시될 때(= Cowork로 만든 다이제스트를 /ax-push 했을 때),
+#        그리고 수동 실행(Actions 탭의 Run workflow). 유료 크론 없음 — 전부 무료.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - "scripts/verify.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    env:
+      MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+      MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+      MAIL_TO: ${{ secrets.MAIL_TO }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # ① 품질 가드 + 이메일 HTML 생성 (구조 오류 시 여기서 실패 → 배포 차단)
+      - name: 검증 및 이메일 렌더
+        run: node scripts/verify.mjs --emit-email scripts/out/email.html
+
+      # ② GitHub Pages로 site/ 공개
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./site
+      - name: Pages 배포
+        id: deploy
+        uses: actions/deploy-pages@v4
+
+      # ③ 이메일 본문 읽기 (시크릿이 설정된 경우에만 발송)
+      - name: 이메일 본문 준비
+        id: mail
+        if: ${{ env.MAIL_USERNAME != '' }}
+        run: |
+          { echo 'html<<__EOF__'; cat scripts/out/email.html; echo '__EOF__'; } >> "$GITHUB_OUTPUT"
+          echo "subject=$(cat scripts/out/email-subject.txt)" >> "$GITHUB_OUTPUT"
+
+      - name: 이메일 발송
+        if: ${{ env.MAIL_USERNAME != '' }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          from: AX-Maru <${{ secrets.MAIL_USERNAME }}>
+          to: ${{ secrets.MAIL_TO }}
+          subject: ${{ steps.mail.outputs.subject }}
+          html_body: ${{ steps.mail.outputs.html }}
